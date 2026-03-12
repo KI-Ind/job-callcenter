@@ -1,0 +1,556 @@
+'use client'
+
+import React, { useState, useEffect } from 'react'
+import { useAuth } from '../../../../contexts/AuthContext'
+import api from '../../../../services/api'
+import axios from 'axios';
+
+interface Education {
+  degree: string;
+  institution: string;
+  startYear: string;
+  endYear?: string;
+  description?: string;
+}
+
+export interface Experience {
+  title: string;
+  company: string;
+  location?: string;
+  startDate: string;
+  endDate?: string;
+  description?: string;
+  current?: boolean;
+}
+
+export interface Language {
+  name: string;
+  level: string;
+}
+
+export interface Address {
+  street?: string;
+  city?: string;
+  postalCode?: string;
+  country?: string;
+}
+
+export interface Resume {
+  _id?: string;
+  filename: string;
+  fileType?: string;
+  fileSize?: number;
+  uploadDate: string;
+  url: string;
+  key?: string;
+}
+
+export interface ProfileData {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  phone?: string;
+  address: Address; // Make address required but with optional fields
+  city?: string;
+  postalCode?: string;
+  summary?: string;
+  resumeUrl?: string;
+  education: Education[];
+  experience: Experience[];
+  skills: string[];
+  languages: Language[];
+  title?: string;
+  resume?: Resume | null;
+  socialLinks?: {
+    linkedin?: string;
+    github?: string;
+    website?: string;
+  };
+  [key: string]: any; // Index signature to allow dynamic access
+}
+
+
+export default function ProfilePage() {
+
+  const { user } = useAuth()
+  const [profileData, setProfileData] = useState<ProfileData>({ 
+    education: [],
+    experience: [],
+    skills: [],
+    languages: [],
+    address: {
+      street: '',
+      city: '',
+      postalCode: '',
+      country: 'Maroc'
+    },
+    socialLinks: {
+      linkedin: '',
+      github: '',
+      website: ''
+    }
+  })
+  const [selectedFile, setSelectedFile] = useState<File | null>(null)
+  const [uploadProgress, setUploadProgress] = useState(0)
+  const [isUploading, setIsUploading] = useState(false)
+  const [cities, setCities] = useState<{_id: string, name: string, postalCode: string, region?: string}[]>([])
+  const [isCitiesLoading, setIsCitiesLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+  const [isEditing, setIsEditing] = useState(false)
+  const [currentSection, setCurrentSection] = useState<string | null>(null)
+  const [error, setError] = useState('')
+  const [success, setSuccess] = useState(false)
+
+  // Data fetching functions
+useEffect(() => {
+  const fetchProfileData = async () => {
+    try {
+      setIsLoading(true)
+      setError('')
+      // Using the correct API endpoint for user profile
+      const response = await api.get('/users/profile')
+      
+      if (response.data && response.data.success) {
+        // Map API response to our profile data structure
+        const userData = response.data.data;
+        console.log('User profile data received:', userData);
+        
+        // Safely parse and set profile data
+        setProfileData(prev => ({
+          ...prev,
+          firstName: userData.firstName || '',
+          lastName: userData.lastName || '',
+          email: userData.email || '',
+          phone: userData.phone || '',
+          title: userData.title || '',
+          summary: userData.summary || '',
+          experience: Array.isArray(userData.experience) ? userData.experience : [],
+          education: Array.isArray(userData.education) ? userData.education : [],
+          skills: Array.isArray(userData.skills) ? userData.skills : [],
+          languages: Array.isArray(userData.languages) ? userData.languages : [],
+          // Ensure address fields are properly populated
+          address: {
+            street: userData.address?.street || '',
+            city: userData.address?.city || '',
+            postalCode: userData.address?.postalCode || '',
+            country: userData.address?.country || 'Maroc'
+          },
+          socialLinks: userData.socialLinks ? {
+            linkedin: userData.socialLinks.linkedin || '',
+            github: userData.socialLinks.github || '',
+            website: userData.socialLinks.website || ''
+          } : {
+            linkedin: '',
+            github: '',
+            website: ''
+          },
+          resume: userData.resume || null
+        }))
+        
+        // If we have a postal code, fetch the city data
+        if (userData.address && userData.address.postalCode) {
+          fetchCityByPostalCode(userData.address.postalCode)
+        }
+      }
+    } catch (err: any) {
+      console.error('Error fetching profile:', err)
+      setError(err.response?.data?.message || "Une erreur s'est produite lors du chargement de votre profil")
+      
+      // Set default values if profile fetch fails
+      setProfileData(prev => ({
+        ...prev,
+        firstName: prev.firstName || '',
+        lastName: prev.lastName || '',
+        email: prev.email || '',
+        address: {
+          street: '',
+          city: '',
+          postalCode: '',
+          country: 'Maroc'
+        }
+      }))
+    } finally {
+      setIsLoading(false)
+    }
+  }
+  
+  // Fetch cities for dropdown
+  const fetchCities = async () => {
+    try {
+      setIsCitiesLoading(true)
+      const response = await api.get('/cities')
+      if (response.data && response.data.success) {
+        setCities(response.data.data)
+      }
+    } catch (err) {
+      console.error('Error fetching cities:', err)
+      // If we can't fetch cities, set some default ones
+      setCities([
+        { _id: '1', name: 'Casablanca', postalCode: '20000', region: 'Casablanca-Settat' },
+        { _id: '2', name: 'Rabat', postalCode: '10000', region: 'Rabat-Salé-Kénitra' },
+        { _id: '3', name: 'Marrakech', postalCode: '40000', region: 'Marrakech-Safi' },
+        { _id: '4', name: 'Fès', postalCode: '30000', region: 'Fès-Meknès' },
+        { _id: '5', name: 'Tanger', postalCode: '90000', region: 'Tanger-Tétouan-Al Hoceima' },
+        { _id: '6', name: 'Agadir', postalCode: '80000', region: 'Souss-Massa' }
+      ])
+    } finally {
+      setIsCitiesLoading(false)
+    }
+  }
+  
+  // Fetch city by postal code
+  const fetchCityByPostalCode = async (postalCode: string) => {
+    if (!postalCode) return
+    
+    try {
+      const response = await api.get(`/cities/${postalCode}`)
+      if (response.data && response.data.success) {
+        const cityData = response.data.data
+        setProfileData(prev => ({
+          ...prev,
+          address: {
+            ...prev.address,
+            city: cityData.name,
+            postalCode: cityData.postalCode
+          }
+        }))
+      }
+    } catch (err) {
+      console.error('Error fetching city by postal code:', err)
+    }
+  }
+  
+  fetchProfileData()
+  fetchCities()
+}, [])
+
+// Form handling functions
+const handleSaveSection = async (section: string, data: any) => {
+  try {
+    setError('')
+    setSuccess(false)
+    
+    console.log(`Updating ${section} with data:`, data)
+    
+    // Create a copy of the current profile data
+    const updatedProfile = { ...profileData };
+    
+    // Update the specific section
+    updatedProfile[section] = data;
+    
+    // Send the update to the API
+    const response = await axios.put('/api/users/profile', updatedProfile, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    
+    if (response.status === 200) {
+      // Update the local state with the response data
+      setProfileData(response.data);
+      setCurrentSection(null); // Close the form
+      setIsEditing(false); // Exit edit mode
+      setSuccess(true)
+      // Auto-hide success message after 3 seconds
+      setTimeout(() => {
+        setSuccess(false)
+      }, 3000)
+    } else {
+      setError(response.data?.message || "Une erreur s'est produite lors de la mise à jour de votre profil")
+    }
+  } catch (err: any) {
+    console.error(`Error updating ${section}:`, err)
+    console.error('Error details:', err.response?.data || err.message)
+    setError(err.response?.data?.message || "Une erreur s'est produite lors de la mise à jour de votre profil")
+  }
+}
+
+const handlePersonalInfoSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault()
+  
+  const form = e.currentTarget;
+  
+  // Get form data with null checks
+  const firstName = form.elements.namedItem('firstName') as HTMLInputElement | null;
+  const lastName = form.elements.namedItem('lastName') as HTMLInputElement | null;
+  const email = form.elements.namedItem('email') as HTMLInputElement | null;
+  const phone = form.elements.namedItem('phone') as HTMLInputElement | null;
+  const street = form.elements.namedItem('street') as HTMLInputElement | null;
+  const city = form.elements.namedItem('city') as HTMLInputElement | null;
+  const postalCode = form.elements.namedItem('postalCode') as HTMLInputElement | null;
+  const country = form.elements.namedItem('country') as HTMLInputElement | null;
+  
+  const formData = {
+    firstName: firstName?.value || '',
+    lastName: lastName?.value || '',
+    email: email?.value || '',
+    phone: phone?.value || '',
+    address: {
+      street: street?.value || '',
+      city: city?.value || '',
+      postalCode: postalCode?.value || '',
+      country: country?.value || 'Maroc'
+    }
+  }
+  
+  // Update profile data
+  handleSaveSection('personal', formData)
+}
+
+const handleSummarySubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault()
+  const summaryElement = e.currentTarget.elements.namedItem('summary') as HTMLTextAreaElement | null;
+  const summary = summaryElement?.value || '';
+  handleSaveSection('summary', summary)
+}
+
+const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const file = e.target.files?.[0]
+  if (file) {
+    // Check file size (5MB max)
+    if (file.size <= 5 * 1024 * 1024) {
+      setSelectedFile(file)
+    } else {
+      setError('Le fichier est trop volumineux. Taille maximale: 5MB')
+    }
+  }
+}
+
+const handleUploadSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault()
+  if (!selectedFile) {
+    setError('Veuillez sélectionner un fichier')
+    return
+  }
+  
+  try {
+    setIsUploading(true)
+    setError('')
+    
+    // Create FormData object
+    const formData = new FormData()
+    formData.append('resume', selectedFile)
+    
+    // Upload the file
+    console.log('Uploading resume file...')
+    const uploadResponse = await api.post('/upload/resume', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      },
+      onUploadProgress: (progressEvent) => {
+        const total = progressEvent.total || 1; // Ensure we don't divide by zero
+        const percentCompleted = Math.round((progressEvent.loaded * 100) / total);
+        setUploadProgress(percentCompleted);
+      }
+    })
+    
+    if (uploadResponse.data && uploadResponse.data.success) {
+      // Update profile with the new resume info
+      const resumeData = {
+        filename: selectedFile.name,
+        fileType: selectedFile.type,
+        fileSize: selectedFile.size,
+        uploadDate: new Date().toISOString(),
+        url: uploadResponse.data.data.url,
+        key: uploadResponse.data.data.key
+      }
+      
+      // Update the user profile with the resume info
+      const updateResponse = await api.put('/users/profile', { resume: resumeData })
+      
+      if (updateResponse.data && updateResponse.data.success) {
+        setProfileData(prev => ({
+          ...prev,
+          resume: resumeData
+        }))
+        setSuccess(true)
+        setCurrentSection(null)
+        
+        // Auto-hide success message after 3 seconds
+        setTimeout(() => {
+          setSuccess(false)
+        }, 3000)
+      } else {
+        setError(updateResponse.data?.message || "Une erreur s'est produite lors de la mise à jour de votre profil")
+      }
+    } else {
+      setError(uploadResponse.data?.message || "Une erreur s'est produite lors du téléversement du fichier")
+    }
+  } catch (err: any) {
+    console.error('Error uploading resume:', err)
+    setError(err.response?.data?.message || "Une erreur s'est produite lors du téléversement du fichier")
+  } finally {
+    setIsUploading(false)
+    setUploadProgress(0)
+    setSelectedFile(null)
+  }
+}
+
+
+  return (
+    <div className="space-y-8 max-w-5xl mx-auto px-4 py-8">
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold text-gray-900">Mon Profil</h1>
+        <button 
+          onClick={() => {
+            // Toggle editing mode
+            const newEditingState = !isEditing
+            setIsEditing(newEditingState)
+            
+            // If we're exiting edit mode, clear the current section
+            if (!newEditingState) {
+              setCurrentSection(null)
+            }
+          }}
+          className="px-4 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 shadow-sm hover:shadow"
+        >
+          {isEditing ? 'Annuler' : 'Modifier le profil'}
+        </button>
+      </div>
+
+      {error && (
+        <div className="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded-md shadow-sm mb-6 animate-fadeIn" role="alert">
+          <div className="flex items-center">
+            <svg className="h-5 w-5 text-red-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+            </svg>
+            <p className="font-medium">{error}</p>
+          </div>
+        </div>
+      )}
+
+      {success && (
+        <div className="bg-green-50 border-l-4 border-green-500 text-green-700 p-4 rounded-md shadow-sm mb-6 animate-fadeIn" role="alert">
+          <div className="flex items-center">
+            <svg className="h-5 w-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+            </svg>
+            <p className="font-medium">Votre profil a été mis à jour avec succès.</p>
+          </div>
+        </div>
+      )}
+      
+      {/* Resume Section */}
+      <div className="bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg">
+        <div className="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50">
+          <div className="flex justify-between items-center">
+            <h2 className="text-lg font-medium text-gray-900">CV / Resume</h2>
+            {isEditing && !currentSection && (
+              <button
+                onClick={() => setCurrentSection('resume')}
+                className="px-3 py-1 text-sm text-blue-600 hover:text-blue-800 border border-blue-300 rounded-md hover:bg-blue-50 transition-colors duration-200"
+              >
+                {profileData.resume ? 'Modifier' : 'Ajouter'}
+              </button>
+            )}
+          </div>
+        </div>
+        <div className="p-6">
+          // Resume section component
+{currentSection === 'resume' ? (
+  <form onSubmit={handleUploadSubmit} className="space-y-4">
+    <div>
+      <label htmlFor="resume" className="block text-sm font-medium text-gray-700 mb-1">
+        Téléverser votre CV (PDF, DOC, DOCX - 5MB max)
+      </label>
+      <div className="flex items-center space-x-2">
+        <input
+          type="file"
+          id="resume"
+          accept=".pdf,.doc,.docx"
+          onChange={handleFileUpload}
+          className="block w-full text-sm text-gray-500
+            file:mr-4 file:py-2 file:px-4
+            file:rounded-md file:border-0
+            file:text-sm file:font-medium
+            file:bg-blue-50 file:text-blue-700
+            hover:file:bg-blue-100"
+        />
+        {selectedFile && (
+          <span className="text-sm text-gray-500">
+            {selectedFile.name} ({Math.round(selectedFile.size / 1024)} KB)
+          </span>
+        )}
+      </div>
+      {isUploading && (
+        <div className="w-full bg-gray-200 rounded-full h-2.5">
+          <div 
+            className="bg-blue-600 h-2.5 rounded-full transition-all duration-300" 
+            style={{ width: `${uploadProgress}%` }}
+          ></div>
+          <p className="text-xs text-gray-500 mt-1 text-center">{uploadProgress}% téléversé</p>
+        </div>
+      )}
+    </div>
+    
+    <div className="flex justify-end space-x-3 mt-4">
+      <button
+        type="button"
+        onClick={() => {
+          setCurrentSection(null)
+          setSelectedFile(null)
+          setError('')
+        }}
+        className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50"
+        disabled={isUploading}
+      >
+        Annuler
+      </button>
+      <button
+        type="submit"
+        className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-blue-300 disabled:cursor-not-allowed"
+        disabled={!selectedFile || isUploading}
+      >
+        {isUploading ? 'Téléversement...' : 'Téléverser'}
+      </button>
+    </div>
+  </form>
+) : (
+  <div>
+    {profileData.resume ? (
+      <div className="flex items-center bg-gray-50 p-4 rounded-lg border border-gray-100 hover:shadow-sm transition-shadow duration-200">
+        <div className="flex-shrink-0 bg-red-100 p-3 rounded-lg">
+          <svg className="w-8 h-8 text-red-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clipRule="evenodd"></path>
+          </svg>
+        </div>
+        <div className="ml-4">
+          <p className="text-sm font-medium text-gray-900">{profileData.resume?.filename || 'CV.pdf'}</p>
+          <p className="text-xs text-gray-500">Téléversé le {profileData.resume?.uploadDate ? new Date(profileData.resume.uploadDate).toLocaleDateString('fr-FR') : new Date().toLocaleDateString('fr-FR')}</p>
+        </div>
+        <a 
+          href={profileData.resume?.url || '#'} 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="ml-auto px-3 py-1 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition-colors duration-200 flex items-center"
+        >
+          <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+          </svg>
+          Télécharger
+        </a>
+      </div>
+    ) : (
+      <div className="flex flex-col items-center justify-center py-8 bg-gray-50 rounded-lg border border-dashed border-gray-300">
+        <svg className="w-12 h-12 text-gray-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+        <p className="text-sm text-gray-500 mb-2">Aucun CV téléversé</p>
+        {isEditing && (
+          <button 
+            onClick={() => setCurrentSection('resume')}
+            className="px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition-colors duration-200"
+          >
+            Ajouter un CV
+          </button>
+        )}
+      </div>
+    )}
+  </div>
+)}
+
+        </div>
+      </div>
+    </div>
+  )
+}

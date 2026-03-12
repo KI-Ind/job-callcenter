@@ -1,0 +1,26 @@
+[
+  {
+    "firstName": "Admin",
+    "lastName": "User",
+    "email": "admin@jobcallcenter.ma",
+    "password": "password123",
+    "role": "admin",
+    "isVerified": true
+  },
+  {
+    "firstName": "Employeur",
+    "lastName": "Test",
+    "email": "employeur@jobcallcenter.ma",
+    "password": "password123",
+    "role": "employeur",
+    "isVerified": true
+  },
+  {
+    "firstName": "Candidat",
+    "lastName": "Test",
+    "email": "candidat@jobcallcenter.ma",
+    "password": "password123",
+    "role": "candidat",
+    "isVerified": true
+  }
+]

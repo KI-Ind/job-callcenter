@@ -1,0 +1,342 @@
+[
+  {
+    "name": "Casablanca",
+    "postalCode": "20000",
+    "region": "Casablanca-Settat",
+    "isActive": true,
+    "_id": "6837400d55b5e96475d22ebb",
+    "__v": 0,
+    "createdAt": "2025-05-28T16:55:41.169Z",
+    "updatedAt": "2025-05-28T16:55:41.169Z"
+  },
+  {
+    "name": "Rabat",
+    "postalCode": "10000",
+    "region": "Rabat-Salé-Kénitra",
+    "isActive": true,
+    "_id": "6837400d55b5e96475d22ebc",
+    "__v": 0,
+    "createdAt": "2025-05-28T16:55:41.171Z",
+    "updatedAt": "2025-05-28T16:55:41.171Z"
+  },
+  {
+    "name": "Marrakech",
+    "postalCode": "40000",
+    "region": "Marrakech-Safi",
+    "isActive": true,
+    "_id": "6837400d55b5e96475d22ebd",
+    "__v": 0,
+    "createdAt": "2025-05-28T16:55:41.172Z",
+    "updatedAt": "2025-05-28T16:55:41.172Z"
+  },
+  {
+    "name": "Fès",
+    "postalCode": "30000",
+    "region": "Fès-Meknès",
+    "isActive": true,
+    "_id": "6837400d55b5e96475d22ebe",
+    "__v": 0,
+    "createdAt": "2025-05-28T16:55:41.172Z",
+    "updatedAt": "2025-05-28T16:55:41.172Z"
+  },
+  {
+    "name": "Tanger",
+    "postalCode": "90000",
+    "region": "Tanger-Tétouan-Al Hoceima",
+    "isActive": true,
+    "_id": "6837400d55b5e96475d22ebf",
+    "__v": 0,
+    "createdAt": "2025-05-28T16:55:41.173Z",
+    "updatedAt": "2025-05-28T16:55:41.173Z"
+  },
+  {
+    "name": "Meknès",
+    "postalCode": "50000",
+    "region": "Fès-Meknès",
+    "isActive": true,
+    "_id": "6837400d55b5e96475d22ec0",
+    "__v": 0,
+    "createdAt": "2025-05-28T16:55:41.173Z",
+    "updatedAt": "2025-05-28T16:55:41.173Z"
+  },
+  {
+    "name": "Oujda",
+    "postalCode": "60000",
+    "region": "Oriental",
+    "isActive": true,
+    "_id": "6837400d55b5e96475d22ec1",
+    "__v": 0,
+    "createdAt": "2025-05-28T16:55:41.174Z",
+    "updatedAt": "2025-05-28T16:55:41.174Z"
+  },
+  {
+    "name": "Kénitra",
+    "postalCode": "14000",
+    "region": "Rabat-Salé-Kénitra",
+    "isActive": true,
+    "_id": "6837400d55b5e96475d22ec2",
+    "__v": 0,
+    "createdAt": "2025-05-28T16:55:41.174Z",
+    "updatedAt": "2025-05-28T16:55:41.174Z"
+  },
+  {
+    "name": "Agadir",
+    "postalCode": "80000",
+    "region": "Souss-Massa",
+    "isActive": true,
+    "_id": "6837400d55b5e96475d22ec3",
+    "__v": 0,
+    "createdAt": "2025-05-28T16:55:41.174Z",
+    "updatedAt": "2025-05-28T16:55:41.174Z"
+  },
+  {
+    "name": "Tétouan",
+    "postalCode": "93000",
+    "region": "Tanger-Tétouan-Al Hoceima",
+    "isActive": true,
+    "_id": "6837400d55b5e96475d22ec4",
+    "__v": 0,
+    "createdAt": "2025-05-28T16:55:41.174Z",
+    "updatedAt": "2025-05-28T16:55:41.174Z"
+  },
+  {
+    "name": "Safi",
+    "postalCode": "46000",
+    "region": "Marrakech-Safi",
+    "isActive": true,
+    "_id": "6837400d55b5e96475d22ec5",
+    "__v": 0,
+    "createdAt": "2025-05-28T16:55:41.174Z",
+    "updatedAt": "2025-05-28T16:55:41.174Z"
+  },
+  {
+    "name": "Mohammedia",
+    "postalCode": "28810",
+    "region": "Casablanca-Settat",
+    "isActive": true,
+    "_id": "6837400d55b5e96475d22ec6",
+    "__v": 0,
+    "createdAt": "2025-05-28T16:55:41.174Z",
+    "updatedAt": "2025-05-28T16:55:41.174Z"
+  },
+  {
+    "name": "El Jadida",
+    "postalCode": "24000",
+    "region": "Casablanca-Settat",
+    "isActive": true,
+    "_id": "6837400d55b5e96475d22ec7",
+    "__v": 0,
+    "createdAt": "2025-05-28T16:55:41.175Z",
+    "updatedAt": "2025-05-28T16:55:41.175Z"
+  },
+  {
+    "name": "Khouribga",
+    "postalCode": "25000",
+    "region": "Béni Mellal-Khénifra",
+    "isActive": true,
+    "_id": "6837400d55b5e96475d22ec8",
+    "__v": 0,
+    "createdAt": "2025-05-28T16:55:41.175Z",
+    "updatedAt": "2025-05-28T16:55:41.175Z"
+  },
+  {
+    "name": "Béni Mellal",
+    "postalCode": "23000",
+    "region": "Béni Mellal-Khénifra",
+    "isActive": true,
+    "_id": "6837400d55b5e96475d22ec9",
+    "__v": 0,
+    "createdAt": "2025-05-28T16:55:41.175Z",
+    "updatedAt": "2025-05-28T16:55:41.175Z"
+  },
+  {
+    "name": "Nador",
+    "postalCode": "62000",
+    "region": "Oriental",
+    "isActive": true,
+    "_id": "6837400d55b5e96475d22eca",
+    "__v": 0,
+    "createdAt": "2025-05-28T16:55:41.175Z",
+    "updatedAt": "2025-05-28T16:55:41.175Z"
+  },
+  {
+    "name": "Taza",
+    "postalCode": "35000",
+    "region": "Fès-Meknès",
+    "isActive": true,
+    "_id": "6837400d55b5e96475d22ecb",
+    "__v": 0,
+    "createdAt": "2025-05-28T16:55:41.176Z",
+    "updatedAt": "2025-05-28T16:55:41.176Z"
+  },
+  {
+    "name": "Settat",
+    "postalCode": "26000",
+    "region": "Casablanca-Settat",
+    "isActive": true,
+    "_id": "6837400d55b5e96475d22ecc",
+    "__v": 0,
+    "createdAt": "2025-05-28T16:55:41.176Z",
+    "updatedAt": "2025-05-28T16:55:41.176Z"
+  },
+  {
+    "name": "Berrechid",
+    "postalCode": "26100",
+    "region": "Casablanca-Settat",
+    "isActive": true,
+    "_id": "6837400d55b5e96475d22ecd",
+    "__v": 0,
+    "createdAt": "2025-05-28T16:55:41.176Z",
+    "updatedAt": "2025-05-28T16:55:41.176Z"
+  },
+  {
+    "name": "Khémisset",
+    "postalCode": "15000",
+    "region": "Rabat-Salé-Kénitra",
+    "isActive": true,
+    "_id": "6837400d55b5e96475d22ece",
+    "__v": 0,
+    "createdAt": "2025-05-28T16:55:41.176Z",
+    "updatedAt": "2025-05-28T16:55:41.176Z"
+  },
+  {
+    "name": "Guelmim",
+    "postalCode": "81000",
+    "region": "Guelmim-Oued Noun",
+    "isActive": true,
+    "_id": "6837400d55b5e96475d22ecf",
+    "__v": 0,
+    "createdAt": "2025-05-28T16:55:41.177Z",
+    "updatedAt": "2025-05-28T16:55:41.177Z"
+  },
+  {
+    "name": "Témara",
+    "postalCode": "12000",
+    "region": "Rabat-Salé-Kénitra",
+    "isActive": true,
+    "_id": "6837400d55b5e96475d22ed0",
+    "__v": 0,
+    "createdAt": "2025-05-28T16:55:41.177Z",
+    "updatedAt": "2025-05-28T16:55:41.177Z"
+  },
+  {
+    "name": "Taourirt",
+    "postalCode": "65800",
+    "region": "Oriental",
+    "isActive": true,
+    "_id": "6837400d55b5e96475d22ed1",
+    "__v": 0,
+    "createdAt": "2025-05-28T16:55:41.177Z",
+    "updatedAt": "2025-05-28T16:55:41.177Z"
+  },
+  {
+    "name": "Berkane",
+    "postalCode": "63300",
+    "region": "Oriental",
+    "isActive": true,
+    "_id": "6837400d55b5e96475d22ed2",
+    "__v": 0,
+    "createdAt": "2025-05-28T16:55:41.177Z",
+    "updatedAt": "2025-05-28T16:55:41.177Z"
+  },
+  {
+    "name": "Larache",
+    "postalCode": "92000",
+    "region": "Tanger-Tétouan-Al Hoceima",
+    "isActive": true,
+    "_id": "6837400d55b5e96475d22ed3",
+    "__v": 0,
+    "createdAt": "2025-05-28T16:55:41.177Z",
+    "updatedAt": "2025-05-28T16:55:41.177Z"
+  },
+  {
+    "name": "Khénifra",
+    "postalCode": "54000",
+    "region": "Béni Mellal-Khénifra",
+    "isActive": true,
+    "_id": "6837400d55b5e96475d22ed4",
+    "__v": 0,
+    "createdAt": "2025-05-28T16:55:41.178Z",
+    "updatedAt": "2025-05-28T16:55:41.178Z"
+  },
+  {
+    "name": "Ouarzazate",
+    "postalCode": "45000",
+    "region": "Drâa-Tafilalet",
+    "isActive": true,
+    "_id": "6837400d55b5e96475d22ed5",
+    "__v": 0,
+    "createdAt": "2025-05-28T16:55:41.178Z",
+    "updatedAt": "2025-05-28T16:55:41.178Z"
+  },
+  {
+    "name": "Essaouira",
+    "postalCode": "44000",
+    "region": "Marrakech-Safi",
+    "isActive": true,
+    "_id": "6837400d55b5e96475d22ed6",
+    "__v": 0,
+    "createdAt": "2025-05-28T16:55:41.178Z",
+    "updatedAt": "2025-05-28T16:55:41.178Z"
+  },
+  {
+    "name": "Tan-Tan",
+    "postalCode": "82000",
+    "region": "Guelmim-Oued Noun",
+    "isActive": true,
+    "_id": "6837400d55b5e96475d22ed7",
+    "__v": 0,
+    "createdAt": "2025-05-28T16:55:41.179Z",
+    "updatedAt": "2025-05-28T16:55:41.179Z"
+  },
+  {
+    "name": "Chefchaouen",
+    "postalCode": "91000",
+    "region": "Tanger-Tétouan-Al Hoceima",
+    "isActive": true,
+    "_id": "6837400d55b5e96475d22ed8",
+    "__v": 0,
+    "createdAt": "2025-05-28T16:55:41.179Z",
+    "updatedAt": "2025-05-28T16:55:41.179Z"
+  },
+  {
+    "name": "Youssoufia",
+    "postalCode": "46300",
+    "region": "Marrakech-Safi",
+    "isActive": true,
+    "_id": "6837400d55b5e96475d22ed9",
+    "__v": 0,
+    "createdAt": "2025-05-28T16:55:41.179Z",
+    "updatedAt": "2025-05-28T16:55:41.179Z"
+  },
+  {
+    "name": "Laâyoune",
+    "postalCode": "70000",
+    "region": "Laâyoune-Sakia El Hamra",
+    "isActive": true,
+    "_id": "6837400d55b5e96475d22eda",
+    "__v": 0,
+    "createdAt": "2025-05-28T16:55:41.179Z",
+    "updatedAt": "2025-05-28T16:55:41.179Z"
+  },
+  {
+    "name": "Tiznit",
+    "postalCode": "85000",
+    "region": "Souss-Massa",
+    "isActive": true,
+    "_id": "6837400d55b5e96475d22edb",
+    "__v": 0,
+    "createdAt": "2025-05-28T16:55:41.179Z",
+    "updatedAt": "2025-05-28T16:55:41.179Z"
+  },
+  {
+    "name": "Dakhla",
+    "postalCode": "73000",
+    "region": "Dakhla-Oued Ed-Dahab",
+    "isActive": true,
+    "_id": "6837400d55b5e96475d22edc",
+    "__v": 0,
+    "createdAt": "2025-05-28T16:55:41.179Z",
+    "updatedAt": "2025-05-28T16:55:41.179Z"
+  }
+]

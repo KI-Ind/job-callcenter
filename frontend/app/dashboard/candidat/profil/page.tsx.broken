@@ -1,0 +1,840 @@
+'use client'
+
+import React, { useState, useEffect } from 'react'
+import { useAuth } from '../../../../contexts/AuthContext'
+import api from '../../../../services/api'
+import axios from 'axios';
+
+interface Education {
+  degree: string;
+  institution: string;
+  startYear: string;
+  endYear?: string;
+  description?: string;
+}
+
+interface Experience {
+  title: string;
+  company: string;
+  location?: string;
+  startDate: string;
+  endDate?: string;
+  description?: string;
+  current?: boolean;
+}
+
+interface Language {
+  name: string;
+  level: string;
+}
+
+interface Address {
+  street?: string;
+  city?: string;
+  postalCode?: string;
+  country?: string;
+}
+
+interface ProfileData {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  phone?: string;
+  address: Address; 
+  city?: string;
+  postalCode?: string;
+  summary?: string;
+  resumeUrl?: string;
+  education: Education[];
+  experience: Experience[];
+  skills: string[];
+  languages: Language[];
+  title?: string;
+  resume?: Resume | null;
+  socialLinks?: {
+    linkedin?: string;
+    github?: string;
+    website?: string;
+  };
+  [key: string]: any; // Index signature to allow dynamic access
+}
+
+interface Resume {
+  _id?: string;
+  filename: string;
+  fileType?: string;
+  fileSize?: number;
+  uploadDate: string;
+  url: string;
+  key?: string;
+}
+
+export default function ProfilePage() {
+  const { user } = useAuth()
+  const [profileData, setProfileData] = useState<ProfileData>({ 
+    education: [],
+    experience: [],
+    skills: [],
+    languages: [],
+    address: {
+      street: '',
+      city: '',
+      postalCode: '',
+      country: 'Maroc'
+    },
+    socialLinks: {
+      linkedin: '',
+      github: '',
+      website: ''
+    }
+  })
+  const [selectedFile, setSelectedFile] = useState<File | null>(null)
+  const [uploadProgress, setUploadProgress] = useState(0)
+  const [isUploading, setIsUploading] = useState(false)
+  const [cities, setCities] = useState<{_id: string, name: string, postalCode: string, region?: string}[]>([])
+  const [isCitiesLoading, setIsCitiesLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+  const [isEditing, setIsEditing] = useState(false)
+  const [currentSection, setCurrentSection] = useState<string | null>(null)
+  const [error, setError] = useState('')
+  const [success, setSuccess] = useState(false)
+
+  useEffect(() => {
+    const fetchProfileData = async () => {
+      try {
+        setIsLoading(true)
+        setError('')
+        // Using the correct API endpoint for user profile
+        const response = await api.get('/users/profile')
+        
+        if (response.data && response.data.success) {
+          // Map API response to our profile data structure
+          const userData = response.data.data;
+          console.log('User profile data received:', userData);
+          
+          // Safely parse and set profile data
+          setProfileData(prev => ({
+            ...prev,
+            firstName: userData.firstName || '',
+            lastName: userData.lastName || '',
+            email: userData.email || '',
+            phone: userData.phone || '',
+            title: userData.title || '',
+            summary: userData.summary || '',
+            experience: Array.isArray(userData.experience) ? userData.experience : [],
+            education: Array.isArray(userData.education) ? userData.education : [],
+            skills: Array.isArray(userData.skills) ? userData.skills : [],
+            languages: Array.isArray(userData.languages) ? userData.languages : [],
+            // Ensure address fields are properly populated
+            address: {
+              street: userData.address?.street || '',
+              city: userData.address?.city || '',
+              postalCode: userData.address?.postalCode || '',
+              country: userData.address?.country || 'Maroc'
+            },
+            socialLinks: userData.socialLinks ? {
+              linkedin: userData.socialLinks.linkedin || '',
+              github: userData.socialLinks.github || '',
+              website: userData.socialLinks.website || ''
+            } : {
+              linkedin: '',
+              github: '',
+              website: ''
+            },
+            resume: userData.resume || null
+          }))
+          
+          // If we have a postal code, fetch the city data
+          if (userData.address && userData.address.postalCode) {
+            fetchCityByPostalCode(userData.address.postalCode)
+          }
+        }
+      } catch (err: any) {
+        console.error('Error fetching profile:', err)
+        setError(err.response?.data?.message || "Une erreur s'est produite lors du chargement de votre profil")
+        
+        // Set default values if profile fetch fails
+        setProfileData(prev => ({
+          ...prev,
+          firstName: prev.firstName || '',
+          lastName: prev.lastName || '',
+          email: prev.email || '',
+          address: {
+            street: '',
+            city: '',
+            postalCode: '',
+            country: 'Maroc'
+          }
+        }))
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    
+    // Fetch cities for dropdown
+    const fetchCities = async () => {
+      try {
+        setIsCitiesLoading(true)
+        const response = await api.get('/cities')
+        if (response.data && response.data.success) {
+          setCities(response.data.data)
+        }
+      } catch (err) {
+        console.error('Error fetching cities:', err)
+        // If we can't fetch cities, set some default ones
+        setCities([
+          { _id: '1', name: 'Casablanca', postalCode: '20000', region: 'Casablanca-Settat' },
+          { _id: '2', name: 'Rabat', postalCode: '10000', region: 'Rabat-Salé-Kénitra' },
+          { _id: '3', name: 'Marrakech', postalCode: '40000', region: 'Marrakech-Safi' },
+          { _id: '4', name: 'Fès', postalCode: '30000', region: 'Fès-Meknès' },
+          { _id: '5', name: 'Tanger', postalCode: '90000', region: 'Tanger-Tétouan-Al Hoceima' },
+          { _id: '6', name: 'Agadir', postalCode: '80000', region: 'Souss-Massa' }
+        ])
+      } finally {
+        setIsCitiesLoading(false)
+      }
+    }
+    
+    // Fetch city by postal code
+    const fetchCityByPostalCode = async (postalCode: string) => {
+      if (!postalCode) return
+      
+      try {
+        const response = await api.get(`/cities/${postalCode}`)
+        if (response.data && response.data.success) {
+          const cityData = response.data.data
+          setProfileData(prev => ({
+            ...prev,
+            address: {
+              ...prev.address,
+              city: cityData.name,
+              postalCode: cityData.postalCode
+            }
+          }))
+        }
+      } catch (err) {
+        console.error('Error fetching city by postal code:', err)
+      }
+    }
+    
+    fetchProfileData()
+    fetchCities()
+  }, [])
+
+  const handleSaveSection = async (section: string, data: any) => {
+    try {
+      setError('')
+      setSuccess(false)
+      
+      console.log(`Updating ${section} with data:`, data)
+      
+      // Create a copy of the current profile data
+      const updatedProfile = { ...profileData };
+      
+      // Update the specific section
+      updatedProfile[section] = data;
+      
+      // Send the update to the API
+      const response = await axios.put('/api/users/profile', updatedProfile, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      if (response.status === 200) {
+        // Update the local state with the response data
+        setProfileData(response.data);
+        setCurrentSection(null); // Close the form
+        setIsEditing(false); // Exit edit mode
+        setSuccess(true)
+        // Auto-hide success message after 3 seconds
+        setTimeout(() => {
+          setSuccess(false)
+        }, 3000)
+      } else {
+        setError(response.data?.message || "Une erreur s'est produite lors de la mise à jour de votre profil")
+      }
+    } catch (err: any) {
+      console.error(`Error updating ${section}:`, err)
+      console.error('Error details:', err.response?.data || err.message)
+      setError(err.response?.data?.message || "Une erreur s'est produite lors de la mise à jour de votre profil")
+    }
+  }
+
+  const handlePersonalInfoSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    
+    const form = e.currentTarget;
+    
+    // Get form data with null checks
+    const firstName = form.elements.namedItem('firstName') as HTMLInputElement | null;
+    const lastName = form.elements.namedItem('lastName') as HTMLInputElement | null;
+    const email = form.elements.namedItem('email') as HTMLInputElement | null;
+    const phone = form.elements.namedItem('phone') as HTMLInputElement | null;
+    const street = form.elements.namedItem('street') as HTMLInputElement | null;
+    const city = form.elements.namedItem('city') as HTMLInputElement | null;
+    const postalCode = form.elements.namedItem('postalCode') as HTMLInputElement | null;
+    const country = form.elements.namedItem('country') as HTMLInputElement | null;
+    
+    const formData = {
+      firstName: firstName?.value || '',
+      lastName: lastName?.value || '',
+      email: email?.value || '',
+      phone: phone?.value || '',
+      address: {
+        street: street?.value || '',
+        city: city?.value || '',
+        postalCode: postalCode?.value || '',
+        country: country?.value || 'Maroc'
+      }
+    }
+    
+    // Update profile data
+    handleSaveSection('personal', formData)
+  }
+
+  const handleSummarySubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const summaryElement = e.currentTarget.elements.namedItem('summary') as HTMLTextAreaElement | null;
+    const summary = summaryElement?.value || '';
+    handleSaveSection('summary', summary)
+  }
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      // Check file size (5MB max)
+      if (file.size <= 5 * 1024 * 1024) {
+        setSelectedFile(file)
+      } else {
+        setError('Le fichier est trop volumineux. Taille maximale: 5MB')
+      }
+    }
+  }
+
+  const handleUploadSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    if (!selectedFile) {
+      setError('Veuillez sélectionner un fichier')
+      return
+    }
+    
+    try {
+      setIsUploading(true)
+      setError('')
+      
+      // Create FormData object
+      const formData = new FormData()
+      formData.append('resume', selectedFile)
+      
+      // Upload the file
+      console.log('Uploading resume file...')
+      const uploadResponse = await api.post('/upload/resume', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        },
+        onUploadProgress: (progressEvent) => {
+          const total = progressEvent.total || 1; // Ensure we don't divide by zero
+          const percentCompleted = Math.round((progressEvent.loaded * 100) / total);
+          setUploadProgress(percentCompleted);
+        }
+      })
+      
+      if (uploadResponse.data && uploadResponse.data.success) {
+        // Update profile with the new resume info
+        const resumeData: Resume = {
+          filename: selectedFile.name,
+          fileType: selectedFile.type,
+          fileSize: selectedFile.size,
+          uploadDate: new Date().toISOString(),
+          url: uploadResponse.data.data.url,
+          key: uploadResponse.data.data.key
+        }
+        
+        // Update the user profile with the resume info
+        const updateResponse = await api.put('/users/profile', { resume: resumeData })
+        
+        if (updateResponse.data && updateResponse.data.success) {
+          setProfileData(prev => ({
+            ...prev,
+            resume: resumeData
+          }))
+          setSuccess(true)
+          setCurrentSection(null)
+          
+          // Auto-hide success message after 3 seconds
+          setTimeout(() => {
+            setSuccess(false)
+          }, 3000)
+        } else {
+          setError(updateResponse.data?.message || "Une erreur s'est produite lors de la mise à jour de votre profil")
+        }
+      } else {
+        setError(uploadResponse.data?.message || "Une erreur s'est produite lors du téléversement du fichier")
+      }
+    } catch (err: any) {
+      console.error('Error uploading resume:', err)
+      setError(err.response?.data?.message || "Une erreur s'est produite lors du téléversement du fichier")
+    } finally {
+      setIsUploading(false)
+      setUploadProgress(0)
+      setSelectedFile(null)
+    }
+  }
+
+  useEffect(() => {
+    const fetchProfileData = async () => {
+      try {
+        setIsLoading(true)
+        setError('')
+        // Using the correct API endpoint for user profile
+        const response = await api.get('/users/profile')
+        
+        if (response.data && response.data.success) {
+          // Map API response to our profile data structure
+          const userData = response.data.data;
+          console.log('User profile data received:', userData);
+          
+          // Safely parse and set profile data
+          setProfileData(prev => ({
+            ...prev,
+            firstName: userData.firstName || '',
+            lastName: userData.lastName || '',
+            email: userData.email || '',
+            phone: userData.phone || '',
+            title: userData.title || '',
+            summary: userData.summary || '',
+            experience: Array.isArray(userData.experience) ? userData.experience : [],
+            education: Array.isArray(userData.education) ? userData.education : [],
+            skills: Array.isArray(userData.skills) ? userData.skills : [],
+            languages: Array.isArray(userData.languages) ? userData.languages : [],
+            // Ensure address fields are properly populated
+            address: {
+              street: userData.address?.street || '',
+              city: userData.address?.city || '',
+              postalCode: userData.address?.postalCode || '',
+              country: userData.address?.country || 'Maroc'
+            },
+            socialLinks: userData.socialLinks ? {
+              linkedin: userData.socialLinks.linkedin || '',
+              github: userData.socialLinks.github || '',
+              website: userData.socialLinks.website || ''
+            } : {
+              linkedin: '',
+              github: '',
+              website: ''
+            },
+            resume: userData.resume || null
+          }))
+          
+          // If we have a postal code, fetch the city data
+          if (userData.address && userData.address.postalCode) {
+            fetchCityByPostalCode(userData.address.postalCode)
+          }
+        }
+      } catch (err: any) {
+        console.error('Error fetching profile:', err)
+        setError(err.response?.data?.message || "Une erreur s'est produite lors du chargement de votre profil")
+        
+        // Set default values if profile fetch fails
+        setProfileData(prev => ({
+          ...prev,
+          firstName: prev.firstName || '',
+          lastName: prev.lastName || '',
+          email: prev.email || '',
+          address: {
+            street: '',
+            city: '',
+            postalCode: '',
+            country: 'Maroc'
+          }
+        }))
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    
+    // Fetch cities for dropdown
+    const fetchCities = async () => {
+      try {
+        setIsCitiesLoading(true)
+        const response = await api.get('/cities')
+        if (response.data && response.data.success) {
+          setCities(response.data.data)
+        }
+      } catch (err) {
+        console.error('Error fetching cities:', err)
+        // If we can't fetch cities, set some default ones
+        setCities([
+          { _id: '1', name: 'Casablanca', postalCode: '20000', region: 'Casablanca-Settat' },
+          { _id: '2', name: 'Rabat', postalCode: '10000', region: 'Rabat-Salé-Kénitra' },
+          { _id: '3', name: 'Marrakech', postalCode: '40000', region: 'Marrakech-Safi' },
+          { _id: '4', name: 'Fès', postalCode: '30000', region: 'Fès-Meknès' },
+          { _id: '5', name: 'Tanger', postalCode: '90000', region: 'Tanger-Tétouan-Al Hoceima' },
+          { _id: '6', name: 'Agadir', postalCode: '80000', region: 'Souss-Massa' }
+        ])
+      } finally {
+        setIsCitiesLoading(false)
+      }
+    }
+    
+    // Fetch city by postal code
+    const fetchCityByPostalCode = async (postalCode: string) => {
+      if (!postalCode) return
+      
+      try {
+        const response = await api.get(`/cities/${postalCode}`)
+        if (response.data && response.data.success) {
+          const cityData = response.data.data
+          setProfileData(prev => ({
+            ...prev,
+            address: {
+              ...prev.address,
+              city: cityData.name,
+              postalCode: cityData.postalCode
+            }
+          }))
+        }
+      } catch (err) {
+        console.error('Error fetching city by postal code:', err)
+      }
+    }
+    
+    fetchProfileData()
+    fetchCities()
+  }, [])
+
+  const handleSaveSection = async (section: string, data: any) => {
+    try {
+      setError('')
+      setSuccess(false)
+      
+      console.log(`Updating ${section} with data:`, data)
+      
+      // Create a copy of the current profile data
+      const updatedProfile = { ...profileData };
+      
+      // Update the specific section
+      updatedProfile[section] = data;
+      
+      // Send the update to the API
+      const response = await axios.put('/api/users/profile', updatedProfile, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      if (response.status === 200) {
+        // Update the local state with the response data
+        setProfileData(response.data);
+        setCurrentSection(null); // Close the form
+        setIsEditing(false); // Exit edit mode
+        setSuccess(true)
+        // Auto-hide success message after 3 seconds
+        setTimeout(() => {
+          setSuccess(false)
+        }, 3000)
+      } else {
+        setError(response.data?.message || "Une erreur s'est produite lors de la mise à jour de votre profil")
+      }
+    } catch (err: any) {
+      console.error(`Error updating ${section}:`, err)
+      console.error('Error details:', err.response?.data || err.message)
+      setError(err.response?.data?.message || "Une erreur s'est produite lors de la mise à jour de votre profil")
+    }
+  }
+
+  const handlePersonalInfoSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    
+    const form = e.currentTarget;
+    
+    // Get form data with null checks
+    const firstName = form.elements.namedItem('firstName') as HTMLInputElement | null;
+    const lastName = form.elements.namedItem('lastName') as HTMLInputElement | null;
+    const email = form.elements.namedItem('email') as HTMLInputElement | null;
+    const phone = form.elements.namedItem('phone') as HTMLInputElement | null;
+    const street = form.elements.namedItem('street') as HTMLInputElement | null;
+    const city = form.elements.namedItem('city') as HTMLInputElement | null;
+    const postalCode = form.elements.namedItem('postalCode') as HTMLInputElement | null;
+    const country = form.elements.namedItem('country') as HTMLInputElement | null;
+    
+    const formData = {
+      firstName: firstName?.value || '',
+      lastName: lastName?.value || '',
+      email: email?.value || '',
+      phone: phone?.value || '',
+      address: {
+        street: street?.value || '',
+        city: city?.value || '',
+        postalCode: postalCode?.value || '',
+        country: country?.value || 'Maroc'
+      }
+    }
+    
+    // Update profile data
+    handleSaveSection('personal', formData)
+  }
+
+  const handleSummarySubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const summaryElement = e.currentTarget.elements.namedItem('summary') as HTMLTextAreaElement | null;
+    const summary = summaryElement?.value || '';
+    handleSaveSection('summary', summary)
+  }
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      // Check file size (5MB max)
+      if (file.size <= 5 * 1024 * 1024) {
+        setSelectedFile(file)
+      } else {
+        setError('Le fichier est trop volumineux. Taille maximale: 5MB')
+      }
+    }
+  }
+
+  const handleUploadSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    if (!selectedFile) {
+      setError('Veuillez sélectionner un fichier')
+      return
+    }
+    
+    try {
+      setIsUploading(true)
+      setError('')
+      
+      // Create FormData object
+      const formData = new FormData()
+
+// Address fields
+<div>
+  <label htmlFor="street" className="block text-sm font-medium text-gray-700">Adresse</label>
+  <input
+    type="text"
+    id="street"
+    value={profileData.address?.street || ''}
+    onChange={(e) => setProfileData({
+      ...profileData, 
+      address: {...profileData.address, street: e.target.value}
+    })}
+    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+    placeholder="Rue, numéro"
+  />
+</div>
+
+<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+  <div>
+    <label htmlFor="city" className="block text-sm font-medium text-gray-700">Ville</label>
+    <select
+      id="city"
+      value={profileData.address?.city || ''}
+      onChange={(e) => {
+        // Find the selected city
+        const selectedCity = cities.find(city => city.name === e.target.value)
+        
+        // Update both city and postal code
+        setProfileData({
+          ...profileData, 
+          address: {
+            ...profileData.address, 
+            city: e.target.value,
+            postalCode: selectedCity?.postalCode || profileData.address?.postalCode || ''
+          }
+        })
+      }}
+      className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+      disabled={isCitiesLoading}
+    >
+      <option value="">Sélectionnez une ville</option>
+      {cities.map(city => (
+        <option key={city._id} value={city.name}>
+          {city.name}
+        </option>
+      ))}
+    </select>
+    {isCitiesLoading && (
+      <p className="text-xs text-gray-500 mt-1">Chargement des villes...</p>
+    )}
+  </div>
+  <div>
+    <label htmlFor="postalCode" className="block text-sm font-medium text-gray-700">Code postal</label>
+    <select
+      id="postalCode"
+      value={profileData.address?.postalCode || ''}
+      onChange={(e) => {
+        // Find the selected city by postal code
+        const selectedCity = cities.find(city => city.postalCode === e.target.value)
+        
+        // Update both postal code and city
+        setProfileData({
+          ...profileData, 
+          address: {
+            ...profileData.address, 
+            postalCode: e.target.value,
+            city: selectedCity?.name || profileData.address?.city || ''
+          }
+        })
+      }}
+      className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+      disabled={isCitiesLoading}
+    >
+      <option value="">Sélectionnez un code postal</option>
+      {cities.map(city => (
+        <option key={city._id} value={city.postalCode}>
+          {city.postalCode} - {city.name}
+        </option>
+      ))}
+    </select>
+  </div>
+  <div>
+    <label htmlFor="country" className="block text-sm font-medium text-gray-700">Pays</label>
+    <input
+      type="text"
+      id="country"
+      value={profileData.address?.country || 'Maroc'}
+      onChange={(e) => setProfileData({
+        ...profileData, 
+        address: {...profileData.address, country: e.target.value}
+      })}
+      className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+    />
+  </div>
+</div>
+
+// ...
+
+// Resume section
+<div className="p-6">
+  {currentSection === 'resume' ? (
+    <form onSubmit={handleUploadSubmit}>
+      <div className="space-y-4">
+        <div>
+          <label htmlFor="resume" className="block text-sm font-medium text-gray-700 mb-1">CV / Resume</label>
+          <input
+            type="file"
+            id="resume"
+            name="resume"
+            accept=".pdf,.doc,.docx"
+            onChange={handleFileUpload}
+            className="block w-full text-sm text-gray-500
+              file:mr-4 file:py-2 file:px-4
+              file:rounded-md file:border-0
+              file:text-sm file:font-semibold
+              file:bg-blue-50 file:text-blue-700
+              hover:file:bg-blue-100"
+          />
+          <p className="mt-1 text-xs text-gray-500">Formats acceptés: PDF, DOC, DOCX. Taille max: 5MB</p>
+        </div>
+        
+        {selectedFile && (
+          <div className="text-sm text-gray-600">
+            <p>Fichier sélectionné: {selectedFile.name}</p>
+            <p>Taille: {Math.round(selectedFile.size / 1024)} KB</p>
+          </div>
+        )}
+        
+        {isUploading && (
+          <div className="w-full bg-gray-200 rounded-full h-2.5">
+            <div 
+              className="bg-blue-600 h-2.5 rounded-full transition-all duration-300" 
+              style={{ width: `${uploadProgress}%` }}
+            ></div>
+            <p className="text-xs text-gray-500 mt-1 text-center">{uploadProgress}% téléversé</p>
+          </div>
+        )}
+      </div>
+      
+      <div className="flex justify-end space-x-3 mt-4">
+        <button
+          type="button"
+          onClick={() => {
+            setCurrentSection(null)
+            setSelectedFile(null)
+            setError('')
+          }}
+          className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50"
+          disabled={isUploading}
+        >
+          Annuler
+        </button>
+        <button
+          type="submit"
+          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-blue-300 disabled:cursor-not-allowed"
+          disabled={!selectedFile || isUploading}
+        >
+          {isUploading ? 'Téléversement...' : 'Téléverser'}
+        </button>
+      </div>
+    </form>
+  ) : (
+    <div>
+      {profileData.resume ? (
+        <div className="flex items-center bg-gray-50 p-4 rounded-lg border border-gray-100 hover:shadow-sm transition-shadow duration-200">
+          <div className="flex-shrink-0 bg-red-100 p-3 rounded-lg">
+            <svg className="w-8 h-8 text-red-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clipRule="evenodd"></path>
+            </svg>
+          </div>
+          <div className="ml-4">
+            <p className="text-sm font-medium text-gray-900">{profileData.resume?.filename || 'CV.pdf'}</p>
+            <p className="text-xs text-gray-500">Téléversé le {profileData.resume?.uploadDate ? new Date(profileData.resume.uploadDate).toLocaleDateString('fr-FR') : new Date().toLocaleDateString('fr-FR')}</p>
+          </div>
+          <a 
+            href={profileData.resume?.url || '#'} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="ml-auto px-3 py-1 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition-colors duration-200 flex items-center"
+          >
+            <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+            </svg>
+            Télécharger
+          </a>
+        </div>
+      ) : (
+        <div className="flex flex-col items-center justify-center py-8 bg-gray-50 rounded-lg border border-dashed border-gray-300">
+          <svg className="w-12 h-12 text-gray-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+          <p className="text-sm text-gray-500 mb-2">Aucun CV téléversé</p>
+          {isEditing && (
+            <button 
+              onClick={() => setCurrentSection('resume')}
+              className="px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition-colors duration-200"
+            >
+              Ajouter un CV
+            </button>
+          )}
+        </div>
+      )}
+              >
+                <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Télécharger
+              </a>
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center py-8 bg-gray-50 rounded-lg border border-dashed border-gray-300">
+              <svg className="w-12 h-12 text-gray-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              <p className="text-sm text-gray-500 mb-2">Aucun CV téléversé</p>
+              {isEditing && (
+                <button 
+                  onClick={() => setCurrentSection('resume')}
+                  className="px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition-colors duration-200"
+                >
+                  Ajouter un CV
+                </button>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}

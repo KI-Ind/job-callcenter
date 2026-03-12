@@ -1,0 +1,86 @@
+[
+  {
+    "name": "Technologie & IT",
+    "slug": "technologie-it",
+    "description": "Emplois dans le secteur de la technologie et de l'informatique",
+    "icon": "computer"
+  },
+  {
+    "name": "Finance & Comptabilité",
+    "slug": "finance-comptabilite",
+    "description": "Emplois dans le secteur financier et comptable",
+    "icon": "attach_money"
+  },
+  {
+    "name": "Marketing & Communication",
+    "slug": "marketing-communication",
+    "description": "Emplois dans le marketing, la publicité et la communication",
+    "icon": "campaign"
+  },
+  {
+    "name": "Vente & Commerce",
+    "slug": "vente-commerce",
+    "description": "Emplois dans la vente, le commerce et le service client",
+    "icon": "shopping_cart"
+  },
+  {
+    "name": "Ingénierie & Technique",
+    "slug": "ingenierie-technique",
+    "description": "Emplois d'ingénierie et techniques",
+    "icon": "build"
+  },
+  {
+    "name": "Santé & Médical",
+    "slug": "sante-medical",
+    "description": "Emplois dans le secteur de la santé et médical",
+    "icon": "local_hospital"
+  },
+  {
+    "name": "Éducation & Formation",
+    "slug": "education-formation",
+    "description": "Emplois dans l'éducation, l'enseignement et la formation",
+    "icon": "school"
+  },
+  {
+    "name": "Administration & Secrétariat",
+    "slug": "administration-secretariat",
+    "description": "Emplois administratifs et de secrétariat",
+    "icon": "description"
+  },
+  {
+    "name": "Centre d'appels",
+    "slug": "centre-appels",
+    "description": "Emplois dans les centres d'appels et services client",
+    "icon": "call"
+  },
+  {
+    "name": "Ressources Humaines",
+    "slug": "ressources-humaines",
+    "description": "Emplois dans les ressources humaines et le recrutement",
+    "icon": "people"
+  },
+  {
+    "name": "Transport & Logistique",
+    "slug": "transport-logistique",
+    "description": "Emplois dans le transport, la logistique et la chaîne d'approvisionnement",
+    "icon": "local_shipping"
+  },
+  {
+    "name": "Hôtellerie & Restauration",
+    "slug": "hotellerie-restauration",
+    "description": "Emplois dans l'hôtellerie, la restauration et le tourisme",
+    "icon": "restaurant"
+  },
+  {
+    "name": "BTP & Construction",
+    "slug": "btp-construction",
+    "description": "Emplois dans le bâtiment, les travaux publics et la construction",
+    "icon": "construction"
+  },
+  {
+    "name": "Autres",
+    "slug": "autres",
+    "description": "Autres types d'emplois qui ne correspondent pas aux catégories existantes",
+    "icon": "more_horiz"
+  }
+]
