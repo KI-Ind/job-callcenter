@@ -17,7 +17,7 @@ const CookieConsent = dynamic(
 )
 
 export const metadata: Metadata = {
-  title: 'JobCallCenter.ma | Trouvez des Emplois en Centre d\'Appel au Maroc',
+  title: 'TonCallCenter.ma | Trouvez des Emplois en Centre d\'Appel au Maroc',
   description: 'Premier portail d\'emploi pour les postes en centre d\'appel au Maroc. Trouvez des emplois, publiez des offres et connectez-vous avec les meilleurs employeurs.',
   keywords: 'centre d\'appel, emplois, Maroc, recrutement, téléconseiller, service client',
   icons: {

@@ -45,7 +45,7 @@ const sendEmail = async (options) => {
     const transporter = createTransporter();
     
     const mailOptions = {
-      from: process.env.EMAIL_FROM || 'JobCallCenter <noreply@jobcallcenter.com>',
+      from: process.env.EMAIL_FROM || 'TonCallCenter <noreply@toncallcenter.ma>',
       to: options.to,
       subject: options.subject,
       text: options.text,
@@ -84,30 +84,30 @@ const sendApplicationStatusEmail = async (options) => {
   switch (options.status) {
     case 'Examinée':
       subject = `Votre candidature pour ${options.jobTitle} est en cours d'examen`;
-      text = `Bonjour ${options.candidateName},\n\nVotre candidature pour le poste "${options.jobTitle}" chez ${options.companyName} est maintenant en cours d'examen.\n\nVous pouvez suivre l'état de votre candidature à tout moment en vous connectant à votre tableau de bord.\n\nCordialement,\nL'équipe JobCallCenter`;
+      text = `Bonjour ${options.candidateName},\n\nVotre candidature pour le poste "${options.jobTitle}" chez ${options.companyName} est maintenant en cours d'examen.\n\nVous pouvez suivre l'état de votre candidature à tout moment en vous connectant à votre tableau de bord.\n\nCordialement,\nL'équipe TonCallCenter`;
       break;
     case 'Entretien':
       subject = `Invitation à un entretien pour ${options.jobTitle}`;
-      text = `Bonjour ${options.candidateName},\n\nFélicitations! Vous êtes invité(e) à un entretien pour le poste "${options.jobTitle}" chez ${options.companyName}.\n\nVeuillez consulter votre tableau de bord pour plus de détails sur l'entretien.\n\nCordialement,\nL'équipe JobCallCenter`;
+      text = `Bonjour ${options.candidateName},\n\nFélicitations! Vous êtes invité(e) à un entretien pour le poste "${options.jobTitle}" chez ${options.companyName}.\n\nVeuillez consulter votre tableau de bord pour plus de détails sur l'entretien.\n\nCordialement,\nL'équipe TonCallCenter`;
       break;
     case 'Acceptée':
       subject = `Félicitations! Votre candidature pour ${options.jobTitle} a été acceptée`;
-      text = `Bonjour ${options.candidateName},\n\nNous sommes ravis de vous informer que votre candidature pour le poste "${options.jobTitle}" chez ${options.companyName} a été acceptée!\n\nVeuillez consulter votre tableau de bord pour les prochaines étapes.\n\nCordialement,\nL'équipe JobCallCenter`;
+      text = `Bonjour ${options.candidateName},\n\nNous sommes ravis de vous informer que votre candidature pour le poste "${options.jobTitle}" chez ${options.companyName} a été acceptée!\n\nVeuillez consulter votre tableau de bord pour les prochaines étapes.\n\nCordialement,\nL'équipe TonCallCenter`;
       break;
     case 'Rejetée':
       subject = `Mise à jour de votre candidature pour ${options.jobTitle}`;
-      text = `Bonjour ${options.candidateName},\n\nNous vous remercions de l'intérêt que vous avez porté au poste "${options.jobTitle}" chez ${options.companyName}.\n\nAprès un examen attentif, l'employeur a décidé de poursuivre avec d'autres candidats dont le profil correspond mieux aux exigences du poste.\n\nNous vous encourageons à consulter régulièrement notre site pour d'autres opportunités qui pourraient correspondre à votre profil.\n\nCordialement,\nL'équipe JobCallCenter`;
+      text = `Bonjour ${options.candidateName},\n\nNous vous remercions de l'intérêt que vous avez porté au poste "${options.jobTitle}" chez ${options.companyName}.\n\nAprès un examen attentif, l'employeur a décidé de poursuivre avec d'autres candidats dont le profil correspond mieux aux exigences du poste.\n\nNous vous encourageons à consulter régulièrement notre site pour d'autres opportunités qui pourraient correspondre à votre profil.\n\nCordialement,\nL'équipe TonCallCenter`;
       break;
     default:
       subject = `Mise à jour de votre candidature pour ${options.jobTitle}`;
-      text = `Bonjour ${options.candidateName},\n\nLe statut de votre candidature pour le poste "${options.jobTitle}" chez ${options.companyName} a été mis à jour.\n\nVeuillez consulter votre tableau de bord pour plus de détails.\n\nCordialement,\nL'équipe JobCallCenter`;
+      text = `Bonjour ${options.candidateName},\n\nLe statut de votre candidature pour le poste "${options.jobTitle}" chez ${options.companyName} a été mis à jour.\n\nVeuillez consulter votre tableau de bord pour plus de détails.\n\nCordialement,\nL'équipe TonCallCenter`;
   }
   
   // Create HTML version with styling
   html = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 5px;">
       <div style="text-align: center; margin-bottom: 20px;">
-        <h1 style="color: #4a5568; margin-bottom: 10px;">JobCallCenter</h1>
+        <h1 style="color: #4a5568; margin-bottom: 10px;">TonCallCenter.ma</h1>
         <div style="height: 3px; background-color: #3182ce; width: 100px; margin: 0 auto;"></div>
       </div>
       
@@ -154,11 +154,11 @@ const sendApplicationStatusEmail = async (options) => {
         <a href="${applicationUrl}" style="background-color: #3182ce; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold;">Voir ma candidature</a>
       </div>
       
-      <p style="color: #4a5568; font-size: 16px; line-height: 1.6;">Cordialement,<br>L'équipe JobCallCenter</p>
+      <p style="color: #4a5568; font-size: 16px; line-height: 1.6;">Cordialement,<br>L'équipe TonCallCenter</p>
       
       <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e0e0e0; font-size: 12px; color: #718096; text-align: center;">
         <p>Cet email a été envoyé automatiquement. Merci de ne pas y répondre.</p>
-        <p>© ${new Date().getFullYear()} JobCallCenter. Tous droits réservés.</p>
+        <p>© ${new Date().getFullYear()} TonCallCenter.ma. Tous droits réservés.</p>
       </div>
     </div>
   `;
@@ -187,19 +187,19 @@ const sendNewJobEmail = async (options) => {
   const baseUrl = process.env.CLIENT_URL || 'http://localhost:3000';
   const jobUrl = `${baseUrl}/jobs/${options.jobId}`;
   
-  const text = `Bonjour ${options.candidateName},\n\nUne nouvelle offre d'emploi qui pourrait vous intéresser a été publiée sur JobCallCenter.\n\n${options.companyName} recherche un(e) ${options.jobTitle} à ${options.location}.\n\nConsultez l'offre complète sur notre site pour postuler.\n\nCordialement,\nL'équipe JobCallCenter`;
+  const text = `Bonjour ${options.candidateName},\n\nUne nouvelle offre d'emploi qui pourrait vous intéresser a été publiée sur TonCallCenter.ma.\n\n${options.companyName} recherche un(e) ${options.jobTitle} à ${options.location}.\n\nConsultez l'offre complète sur notre site pour postuler.\n\nCordialement,\nL'équipe TonCallCenter`;
   
   const html = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 5px;">
       <div style="text-align: center; margin-bottom: 20px;">
-        <h1 style="color: #4a5568; margin-bottom: 10px;">JobCallCenter</h1>
+        <h1 style="color: #4a5568; margin-bottom: 10px;">TonCallCenter.ma</h1>
         <div style="height: 3px; background-color: #3182ce; width: 100px; margin: 0 auto;"></div>
       </div>
       
       <p style="color: #4a5568; font-size: 16px; line-height: 1.6;">Bonjour ${options.candidateName},</p>
       
       <p style="color: #4a5568; font-size: 16px; line-height: 1.6;">
-        Une nouvelle offre d'emploi qui pourrait vous intéresser a été publiée sur JobCallCenter.
+        Une nouvelle offre d'emploi qui pourrait vous intéresser a été publiée sur TonCallCenter.ma.
       </p>
       
       <div style="background-color: #f7fafc; border-left: 4px solid #3182ce; padding: 15px; margin: 20px 0;">
@@ -212,11 +212,11 @@ const sendNewJobEmail = async (options) => {
         <a href="${jobUrl}" style="background-color: #3182ce; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold;">Voir l'offre</a>
       </div>
       
-      <p style="color: #4a5568; font-size: 16px; line-height: 1.6;">Cordialement,<br>L'équipe JobCallCenter</p>
+      <p style="color: #4a5568; font-size: 16px; line-height: 1.6;">Cordialement,<br>L'équipe TonCallCenter</p>
       
       <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e0e0e0; font-size: 12px; color: #718096; text-align: center;">
         <p>Si vous ne souhaitez plus recevoir de notifications pour les nouvelles offres d'emploi, vous pouvez modifier vos préférences dans les paramètres de votre compte.</p>
-        <p>© ${new Date().getFullYear()} JobCallCenter. Tous droits réservés.</p>
+        <p>© ${new Date().getFullYear()} TonCallCenter.ma. Tous droits réservés.</p>
       </div>
     </div>
   `;

@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['jobcallcenter.ma', 'res.cloudinary.com', 'localhost'],
+    domains: ['toncallcenter.ma', 'res.cloudinary.com', 'localhost'],
   },
   async rewrites() {
     return [

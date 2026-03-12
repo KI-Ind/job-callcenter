@@ -7,7 +7,7 @@ import Breadcrumb from '../components/Breadcrumb'
 async function getCompanies() {
   // Simuler un délai d'API
   await new Promise(resolve => setTimeout(resolve, 100))
-  
+
   // Données statiques pour la démo
   return [
     {
@@ -69,30 +69,30 @@ async function getCompanies() {
 
 export default async function EntreprisesPage() {
   const companies = await getCompanies()
-  
+
   return (
     <main className="bg-gray-50 min-h-screen py-8">
       <div className="container mx-auto px-4">
         {/* Breadcrumb */}
-        <Breadcrumb 
+        <Breadcrumb
           customItems={[
             { name: 'Accueil', url: '/' },
             { name: 'Entreprises', url: '/entreprises' },
           ]}
         />
-        
+
         {/* En-tête de la page */}
         <header className="mt-6 mb-8 text-center">
           <h1 className="text-3xl font-bold text-gray-800 mb-3">Centres d'appels qui recrutent</h1>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            Découvrez les entreprises partenaires de JobCallCenter.ma qui proposent régulièrement des opportunités d'emploi dans le secteur des centres d'appels au Maroc.
+            Découvrez les entreprises partenaires de TonCallCenter.ma qui proposent régulièrement des opportunités d'emploi dans le secteur des centres d'appels au Maroc.
           </p>
         </header>
-        
+
         {/* Liste des entreprises */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           {companies.map((company) => (
-            <Link 
+            <Link
               key={company.id}
               href={`/entreprises/${company.id}`}
               className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow"
@@ -121,9 +121,9 @@ export default async function EntreprisesPage() {
                     </div>
                   </div>
                 </div>
-                
+
                 <p className="text-gray-600 text-sm mb-4 line-clamp-2">{company.description}</p>
-                
+
                 <div className="flex flex-wrap gap-2 mb-4">
                   {company.specialties.slice(0, 3).map((specialty, index) => (
                     <span key={index} className="bg-blue-50 text-blue-700 px-2 py-1 rounded-full text-xs">
@@ -131,7 +131,7 @@ export default async function EntreprisesPage() {
                     </span>
                   ))}
                 </div>
-                
+
                 <div className="flex items-center justify-between pt-3 border-t border-gray-100">
                   <div className="flex items-center text-sm">
                     <FaBuilding className="mr-1 text-gray-400" />
@@ -143,15 +143,15 @@ export default async function EntreprisesPage() {
             </Link>
           ))}
         </div>
-        
+
         {/* Appel à l'action */}
         <div className="bg-blue-50 rounded-lg p-6 text-center">
           <h2 className="text-xl font-semibold mb-2 text-gray-800">Vous êtes un centre d'appels qui recrute ?</h2>
           <p className="text-gray-600 mb-4">
-            Rejoignez JobCallCenter.ma et publiez vos offres d'emploi pour attirer les meilleurs talents.
+            Rejoignez TonCallCenter.ma et publiez vos offres d'emploi pour attirer les meilleurs talents.
           </p>
-          <Link 
-            href="/contact" 
+          <Link
+            href="/contact"
             className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-md"
           >
             Contactez-nous

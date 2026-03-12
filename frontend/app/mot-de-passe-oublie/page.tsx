@@ -23,7 +23,7 @@ export default function ForgotPasswordPage() {
     try {
       const response = await forgotPassword({ email })
       setSuccess('Un email de réinitialisation a été envoyé à votre adresse email.')
-      
+
       // Redirect to login page after 3 seconds
       setTimeout(() => {
         router.push('/connexion')
@@ -44,7 +44,7 @@ export default function ForgotPasswordPage() {
             <ImageWithFallback
               src="/images/JBC-icon-white.png"
               fallbackSrc="/images/JBC-Logo.png"
-              alt="JobCallCenter.ma"
+              alt="TonCallCenter.ma"
               width={220}
               height={70}
               className="mx-auto"
@@ -61,7 +61,7 @@ export default function ForgotPasswordPage() {
           </div>
         </div>
       </div>
-      
+
       {/* Right side - Form */}
       <div className="w-full md:w-1/2 bg-white flex items-center justify-center p-12">
         <div className="w-full max-w-md">
@@ -69,7 +69,7 @@ export default function ForgotPasswordPage() {
             <ImageWithFallback
               src="/images/JBC-icon.png"
               fallbackSrc="/images/JBC-Logo.png"
-              alt="JobCallCenter Icon"
+              alt="TonCallCenter Icon"
               width={50}
               height={50}
               className="mx-auto mb-4"

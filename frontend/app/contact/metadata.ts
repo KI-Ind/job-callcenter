@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Contactez-nous | JobCallCenter',
-  description: 'Contactez l\'équipe de JobCallCenter pour toute question ou besoin spécifique',
+  title: 'Contactez-nous | TonCallCenter.ma',
+  description: 'Vous avez des questions ? Contactez l\'équipe TonCallCenter.ma pour toute assistance.',
 }

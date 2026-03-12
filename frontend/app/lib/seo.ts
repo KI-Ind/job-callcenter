@@ -23,20 +23,20 @@ export function generateSEOMetadata({
   noIndex = false,
 }: SEOParams): Metadata {
   // Base URL pour les URL canoniques et les images
-  const baseUrl = 'https://jobcallcenter.ma'
-  
+  const baseUrl = 'https://toncallcenter.ma'
+
   // URL canonique complète
   const canonicalUrl = canonical ? `${baseUrl}${canonical}` : undefined
-  
+
   return {
     title,
     description,
     keywords: keywords.join(', '),
     metadataBase: new URL(baseUrl),
-    
+
     // Canonical URL
     ...(canonicalUrl && { alternates: { canonical: canonicalUrl } }),
-    
+
     // Robots
     robots: {
       index: !noIndex,
@@ -46,7 +46,7 @@ export function generateSEOMetadata({
         follow: !noIndex,
       },
     },
-    
+
     // Open Graph
     openGraph: {
       title,
@@ -61,10 +61,10 @@ export function generateSEOMetadata({
           alt: title,
         },
       ],
-      siteName: 'JobCallCenter.ma',
+      siteName: 'TonCallCenter.ma',
       locale: 'fr_FR',
     },
-    
+
     // Twitter
     twitter: {
       card: 'summary_large_image',
@@ -90,7 +90,7 @@ export function generateJobPostingSchema(job: any): string {
     'hiringOrganization': {
       '@type': 'Organization',
       'name': job.company,
-      'logo': job.companyLogo ? `https://jobcallcenter.ma${job.companyLogo}` : undefined,
+      'logo': job.companyLogo ? `https://toncallcenter.ma${job.companyLogo}` : undefined,
       'sameAs': job.companyWebsite
     },
     'jobLocation': {
@@ -130,7 +130,7 @@ function mapContractTypeToSchema(contractType: string): string {
     'Temps partiel': 'PART_TIME',
     'Intérim': 'TEMPORARY'
   }
-  
+
   return mapping[contractType] || 'OTHER'
 }
 
@@ -141,13 +141,13 @@ export function generateOrganizationSchema(): string {
   const organization = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    'name': 'JobCallCenter.ma',
-    'url': 'https://jobcallcenter.ma',
-    'logo': 'https://jobcallcenter.ma/images/logo.png',
+    'name': 'TonCallCenter.ma',
+    'url': 'https://toncallcenter.ma',
+    'logo': 'https://toncallcenter.ma/images/logo.png',
     'sameAs': [
-      'https://www.facebook.com/jobcallcenter',
-      'https://www.linkedin.com/company/jobcallcenter',
-      'https://www.instagram.com/jobcallcenter'
+      'https://www.facebook.com/toncallcenter',
+      'https://www.linkedin.com/company/toncallcenter',
+      'https://www.instagram.com/toncallcenter'
     ],
     'contactPoint': {
       '@type': 'ContactPoint',

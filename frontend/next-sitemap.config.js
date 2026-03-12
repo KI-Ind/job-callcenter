@@ -1,10 +1,10 @@
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
-  siteUrl: process.env.NEXT_PUBLIC_BASE_URL || 'https://jobcallcenter.ma',
+  siteUrl: process.env.NEXT_PUBLIC_BASE_URL || 'https://toncallcenter.ma',
   generateRobotsTxt: true,
   robotsTxtOptions: {
     additionalSitemaps: [
-      'https://jobcallcenter.ma/sitemap-emplois.xml', // Sitemap dynamique pour les emplois
+      'https://toncallcenter.ma/sitemap-emplois.xml', // Sitemap dynamique pour les emplois
     ],
     policies: [
       {
