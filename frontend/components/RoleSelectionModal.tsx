@@ -23,7 +23,7 @@ export default function RoleSelectionModal({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    
+
     try {
       await onRoleSelect(selectedRole);
     } catch (error) {
@@ -49,12 +49,12 @@ export default function RoleSelectionModal({
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-6 max-w-md w-full">
-        <h2 className="text-xl font-semibold mb-4">Bienvenue sur JobCallCenter</h2>
+        <h2 className="text-xl font-semibold mb-4">Bienvenue sur TonCallCenter.ma</h2>
         <p className="text-gray-600 mb-6">
-          Vous vous connectez pour la première fois avec {getProviderName(provider)}. 
+          Vous vous connectez pour la première fois avec {getProviderName(provider)}.
           Veuillez sélectionner votre rôle pour continuer.
         </p>
-        
+
         <form onSubmit={handleSubmit}>
           <div className="space-y-4 mb-6">
             <div className="flex items-center">
@@ -71,7 +71,7 @@ export default function RoleSelectionModal({
                 Je cherche un emploi (Candidat)
               </label>
             </div>
-            
+
             <div className="flex items-center">
               <input
                 id="role-employeur"
@@ -87,7 +87,7 @@ export default function RoleSelectionModal({
               </label>
             </div>
           </div>
-          
+
           <div className="flex justify-end space-x-3">
             <button
               type="button"

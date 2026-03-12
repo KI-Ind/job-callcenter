@@ -73,10 +73,10 @@ export default function RegisterPage() {
         password: formData.password,
         role: formData.userType === 'candidat' ? 'candidat' : 'employeur'
       }
-      
+
       // Appeler l'API d'inscription
       const response = await register(userData)
-      
+
       if (response.success) {
         // Déterminer la redirection en fonction du rôle de l'utilisateur
         const role = response.user?.role;
@@ -112,7 +112,7 @@ export default function RegisterPage() {
         console.log('OAuth init error (non-blocking):', error);
       }
     };
-    
+
     initOAuthServices();
   }, []);
 
@@ -121,10 +121,10 @@ export default function RegisterPage() {
     setError('')
     try {
       let response: AuthResponse;
-      
+
       // Utiliser le type d'utilisateur sélectionné dans le formulaire
       const role = formData.userType === 'candidat' ? 'candidat' : 'employeur';
-      
+
       // Appeler directement les méthodes du service OAuth
       switch (provider) {
         case 'google':
@@ -146,12 +146,12 @@ export default function RegisterPage() {
         if (response.token) {
           localStorage.setItem('token', response.token);
         }
-        
+
         // Ensure user is in localStorage
         if (response.user) {
           localStorage.setItem('user', JSON.stringify(response.user));
         }
-        
+
         // Déterminer la redirection en fonction du rôle de l'utilisateur
         const userRole = response.user?.role;
         if (userRole === 'candidat') {
@@ -183,14 +183,14 @@ export default function RegisterPage() {
             <ImageWithFallback
               src="/images/JBC-icon-white.png"
               fallbackSrc="/images/JBC-Logo.png"
-              alt="JobCallCenter.ma"
+              alt="TonCallCenter.ma"
               width={220}
               height={70}
               className="mx-auto"
             />
           </Link>
           <div className="hidden md:block text-white">
-            <h2 className="text-3xl font-bold mb-6">Rejoignez JobCallCenter.ma</h2>
+            <h2 className="text-3xl font-bold mb-6">Rejoignez TonCallCenter.ma</h2>
             <p className="mb-4">
               Créez votre compte pour accéder à toutes les fonctionnalités de notre plateforme spécialisée dans le recrutement en centre d&apos;appel au Maroc.
             </p>
@@ -217,7 +217,7 @@ export default function RegisterPage() {
           </div>
         </div>
       </div>
-      
+
       {/* Right side - Registration form */}
       <div className="w-full md:w-1/2 bg-white flex items-center justify-center p-12">
         <div className="w-full max-w-md">
@@ -225,7 +225,7 @@ export default function RegisterPage() {
             <ImageWithFallback
               src="/images/JBC-icon.png"
               fallbackSrc="/images/JBC-Logo.png"
-              alt="JobCallCenter Icon"
+              alt="TonCallCenter Icon"
               width={50}
               height={50}
               className="mx-auto mb-4"
@@ -249,10 +249,10 @@ export default function RegisterPage() {
             >
               <svg className="h-5 w-5 mr-2" viewBox="0 0 24 24" width="24" height="24">
                 <g transform="matrix(1, 0, 0, 1, 27.009001, -39.238998)">
-                  <path fill="#4285F4" d="M -3.264 51.509 C -3.264 50.719 -3.334 49.969 -3.454 49.239 L -14.754 49.239 L -14.754 53.749 L -8.284 53.749 C -8.574 55.229 -9.424 56.479 -10.684 57.329 L -10.684 60.329 L -6.824 60.329 C -4.564 58.239 -3.264 55.159 -3.264 51.509 Z"/>
-                  <path fill="#34A853" d="M -14.754 63.239 C -11.514 63.239 -8.804 62.159 -6.824 60.329 L -10.684 57.329 C -11.764 58.049 -13.134 58.489 -14.754 58.489 C -17.884 58.489 -20.534 56.379 -21.484 53.529 L -25.464 53.529 L -25.464 56.619 C -23.494 60.539 -19.444 63.239 -14.754 63.239 Z"/>
-                  <path fill="#FBBC05" d="M -21.484 53.529 C -21.734 52.809 -21.864 52.039 -21.864 51.239 C -21.864 50.439 -21.724 49.669 -21.484 48.949 L -21.484 45.859 L -25.464 45.859 C -26.284 47.479 -26.754 49.299 -26.754 51.239 C -26.754 53.179 -26.284 54.999 -25.464 56.619 L -21.484 53.529 Z"/>
-                  <path fill="#EA4335" d="M -14.754 43.989 C -12.984 43.989 -11.404 44.599 -10.154 45.789 L -6.734 42.369 C -8.804 40.429 -11.514 39.239 -14.754 39.239 C -19.444 39.239 -23.494 41.939 -25.464 45.859 L -21.484 48.949 C -20.534 46.099 -17.884 43.989 -14.754 43.989 Z"/>
+                  <path fill="#4285F4" d="M -3.264 51.509 C -3.264 50.719 -3.334 49.969 -3.454 49.239 L -14.754 49.239 L -14.754 53.749 L -8.284 53.749 C -8.574 55.229 -9.424 56.479 -10.684 57.329 L -10.684 60.329 L -6.824 60.329 C -4.564 58.239 -3.264 55.159 -3.264 51.509 Z" />
+                  <path fill="#34A853" d="M -14.754 63.239 C -11.514 63.239 -8.804 62.159 -6.824 60.329 L -10.684 57.329 C -11.764 58.049 -13.134 58.489 -14.754 58.489 C -17.884 58.489 -20.534 56.379 -21.484 53.529 L -25.464 53.529 L -25.464 56.619 C -23.494 60.539 -19.444 63.239 -14.754 63.239 Z" />
+                  <path fill="#FBBC05" d="M -21.484 53.529 C -21.734 52.809 -21.864 52.039 -21.864 51.239 C -21.864 50.439 -21.724 49.669 -21.484 48.949 L -21.484 45.859 L -25.464 45.859 C -26.284 47.479 -26.754 49.299 -26.754 51.239 C -26.754 53.179 -26.284 54.999 -25.464 56.619 L -21.484 53.529 Z" />
+                  <path fill="#EA4335" d="M -14.754 43.989 C -12.984 43.989 -11.404 44.599 -10.154 45.789 L -6.734 42.369 C -8.804 40.429 -11.514 39.239 -14.754 39.239 C -19.444 39.239 -23.494 41.939 -25.464 45.859 L -21.484 48.949 C -20.534 46.099 -17.884 43.989 -14.754 43.989 Z" />
                 </g>
               </svg>
               S'inscrire avec Google
@@ -263,7 +263,7 @@ export default function RegisterPage() {
               disabled={loading}
             >
               <svg className="h-5 w-5 mr-2" fill="#1877F2" viewBox="0 0 24 24">
-                <path d="M12 2.04C6.5 2.04 2 6.53 2 12.06C2 17.06 5.66 21.21 10.44 21.96V14.96H7.9V12.06H10.44V9.85C10.44 7.34 11.93 5.96 14.22 5.96C15.31 5.96 16.45 6.15 16.45 6.15V8.62H15.19C13.95 8.62 13.56 9.39 13.56 10.18V12.06H16.34L15.89 14.96H13.56V21.96C15.9 21.59 18.03 20.37 19.6 18.57C21.16 16.76 22.03 14.47 22 12.06C22 6.53 17.5 2.04 12 2.04Z"/>
+                <path d="M12 2.04C6.5 2.04 2 6.53 2 12.06C2 17.06 5.66 21.21 10.44 21.96V14.96H7.9V12.06H10.44V9.85C10.44 7.34 11.93 5.96 14.22 5.96C15.31 5.96 16.45 6.15 16.45 6.15V8.62H15.19C13.95 8.62 13.56 9.39 13.56 10.18V12.06H16.34L15.89 14.96H13.56V21.96C15.9 21.59 18.03 20.37 19.6 18.57C21.16 16.76 22.03 14.47 22 12.06C22 6.53 17.5 2.04 12 2.04Z" />
               </svg>
               S'inscrire avec Facebook
             </button>
@@ -273,7 +273,7 @@ export default function RegisterPage() {
               disabled={loading}
             >
               <svg className="h-5 w-5 mr-2" fill="#0A66C2" viewBox="0 0 24 24">
-                <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
+                <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z" />
               </svg>
               S'inscrire avec LinkedIn
             </button>
@@ -390,7 +390,7 @@ export default function RegisterPage() {
                 <div className="grid grid-cols-2 gap-4">
                   <div
                     className={`border rounded-md p-4 flex items-center cursor-pointer transition-colors ${formData.userType === 'candidat' ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'}`}
-                    onClick={() => setFormData({...formData, userType: 'candidat'})}
+                    onClick={() => setFormData({ ...formData, userType: 'candidat' })}
                   >
                     <input
                       type="radio"
@@ -408,7 +408,7 @@ export default function RegisterPage() {
                   </div>
                   <div
                     className={`border rounded-md p-4 flex items-center cursor-pointer transition-colors ${formData.userType === 'employeur' ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'}`}
-                    onClick={() => setFormData({...formData, userType: 'employeur'})}
+                    onClick={() => setFormData({ ...formData, userType: 'employeur' })}
                   >
                     <input
                       type="radio"

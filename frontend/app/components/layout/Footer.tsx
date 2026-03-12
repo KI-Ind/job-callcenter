@@ -13,7 +13,7 @@ const CookieManager = dynamic(
 
 export default function Footer() {
   const currentYear = new Date().getFullYear()
-  
+
   return (
     <footer className="bg-gray-900 text-white pt-12 pb-6">
       <div className="container mx-auto px-4">
@@ -23,7 +23,7 @@ export default function Footer() {
             <Link href="/" className="inline-block mb-4">
               <Image
                 src="/images/JBC-Logo.png"
-                alt="JobCallCenter.ma"
+                alt="TonCallCenter.ma"
                 width={220}
                 height={80}
                 className="h-16 w-auto"
@@ -44,7 +44,7 @@ export default function Footer() {
               </a>
             </div>
           </div>
-          
+
           {/* Quick Links */}
           <div>
             <h3 className="text-lg font-semibold mb-4">Quick links</h3>
@@ -66,7 +66,7 @@ export default function Footer() {
               </li>
             </ul>
           </div>
-          
+
           {/* Resources */}
           <div>
             <h3 className="text-lg font-semibold mb-4">Resources</h3>
@@ -88,7 +88,7 @@ export default function Footer() {
               </li>
             </ul>
           </div>
-          
+
           {/* Legal */}
           <div>
             <h3 className="text-lg font-semibold mb-4">Legal</h3>
@@ -108,9 +108,9 @@ export default function Footer() {
             </ul>
           </div>
         </div>
-        
+
         <div className="border-t border-gray-800 mt-8 pt-6 text-center text-gray-500 text-sm">
-          <p className="mb-2">&copy; {currentYear} JobCallCenter. Tous droits réservés.</p>
+          <p className="mb-2">&copy; {currentYear} TonCallCenter.ma. Tous droits réservés.</p>
           <div className="flex justify-center mt-3">
             <CookieManager />
           </div>

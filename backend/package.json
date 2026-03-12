@@ -1,7 +1,7 @@
 {
-  "name": "jobcallcenter-backend",
+  "name": "toncallcenter-backend",
   "version": "1.0.0",
-  "description": "Backend API for JobCallCenter.ma platform",
+  "description": "Backend API for TonCallCenter.ma platform",
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",

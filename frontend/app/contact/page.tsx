@@ -21,11 +21,11 @@ export default function Contact() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setFormStatus('loading')
-    
+
     try {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000))
-      
+
       // Success
       setFormStatus('success')
       setFormData({
@@ -34,7 +34,7 @@ export default function Contact() {
         subject: '',
         message: ''
       })
-      
+
       // Reset to idle after 3 seconds
       setTimeout(() => {
         setFormStatus('idle')
@@ -42,7 +42,7 @@ export default function Contact() {
     } catch (error) {
       setFormStatus('error')
       setErrorMessage('Une erreur est survenue. Veuillez réessayer plus tard.')
-      
+
       // Reset error after 3 seconds
       setTimeout(() => {
         setFormStatus('idle')
@@ -126,11 +126,10 @@ export default function Contact() {
               <button
                 type="submit"
                 disabled={formStatus === 'loading'}
-                className={`w-full py-3 px-6 text-white font-semibold rounded-md transition duration-200 ${
-                  formStatus === 'loading' 
-                    ? 'bg-blue-400 cursor-not-allowed' 
+                className={`w-full py-3 px-6 text-white font-semibold rounded-md transition duration-200 ${formStatus === 'loading'
+                    ? 'bg-blue-400 cursor-not-allowed'
                     : 'bg-blue-600 hover:bg-blue-700'
-                }`}
+                  }`}
               >
                 {formStatus === 'loading' ? 'Envoi en cours...' : 'Envoyer le message'}
               </button>
@@ -153,7 +152,7 @@ export default function Contact() {
           <div>
             <div className="bg-white rounded-lg shadow-sm p-8 mb-8">
               <h2 className="text-2xl font-semibold text-gray-800 mb-6">Nos coordonnées</h2>
-              
+
               <div className="space-y-6">
                 <div className="flex items-start">
                   <div className="flex-shrink-0 mt-1">
@@ -162,8 +161,8 @@ export default function Contact() {
                   <div className="ml-4">
                     <h3 className="text-lg font-medium text-gray-800">Adresse</h3>
                     <p className="text-gray-600 mt-1">
-                    68 Avenue Fal Ouled Oumeir,<br />
-                    Rabat Agdal,<br />
+                      68 Avenue Fal Ouled Oumeir,<br />
+                      Rabat Agdal,<br />
                       Maroc
                     </p>
                   </div>
@@ -175,8 +174,8 @@ export default function Contact() {
                   </div>
                   <div className="ml-4">
                     <h3 className="text-lg font-medium text-gray-800">Email</h3>
-                    <a href="mailto:contact@jobcallcenter.ma" className="text-blue-600 hover:underline mt-1 block">
-                      contact@jobcallcenter.ma
+                    <a href="mailto:contact@toncallcenter.ma" className="text-blue-600 hover:underline mt-1 block">
+                      contact@toncallcenter.ma
                     </a>
                   </div>
                 </div>
@@ -197,7 +196,7 @@ export default function Contact() {
 
             <div className="bg-white rounded-lg shadow-sm p-8">
               <h2 className="text-2xl font-semibold text-gray-800 mb-6">Horaires d'ouverture</h2>
-              
+
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Lundi - Vendredi</span>
@@ -219,12 +218,12 @@ export default function Contact() {
         <div className="mt-12">
           <h2 className="text-2xl font-semibold text-gray-800 mb-6">Notre localisation</h2>
           <div className="h-96 w-full rounded-lg overflow-hidden shadow-sm">
-            <iframe 
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3323.846365058236!2d-7.6192839!3d33.5731104!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzPCsDM0JzIzLjIiTiA3wrAzNycwOS40Ilc!5e0!3m2!1sfr!2sma!4v1622543245678!5m2!1sfr!2sma" 
-              width="100%" 
-              height="100%" 
-              style={{ border: 0 }} 
-              allowFullScreen 
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3323.846365058236!2d-7.6192839!3d33.5731104!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzPCsDM0JzIzLjIiTiA3wrAzNycwOS40Ilc!5e0!3m2!1sfr!2sma!4v1622543245678!5m2!1sfr!2sma"
+              width="100%"
+              height="100%"
+              style={{ border: 0 }}
+              allowFullScreen
               loading="lazy"
               title="JobCallCenter Location"
             ></iframe>

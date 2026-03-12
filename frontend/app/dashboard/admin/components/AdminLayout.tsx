@@ -76,7 +76,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
             <div className="flex-shrink-0 flex items-center px-4">
               <ImageWithFallback
                 src="/images/logo.png"
-                alt="JobCallCenter Logo"
+                alt="TonCallCenter Logo"
                 width={150}
                 height={50}
                 fallbackSrc="/images/logo-fallback.png"
@@ -122,7 +122,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
               <div className="flex items-center flex-shrink-0 px-4">
                 <ImageWithFallback
                   src="/images/logo.png"
-                  alt="JobCallCenter Logo"
+                  alt="TonCallCenter Logo"
                   width={150}
                   height={50}
                   fallbackSrc="/images/logo-fallback.png"
